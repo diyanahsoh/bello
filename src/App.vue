@@ -1,65 +1,74 @@
 <template>
-  <div id="app" class="container mt-5">
+  <div id="app" class="container mt-3">
     <div class="row">
       <h1>Bello - Kanban Board</h1>
-      <div class="col">Board Name</div>
-      <div class="col">Board Description</div>
-      <div class="col-3 form-inline">
-        <b-form-input v-model="newTask" placeholder="Enter Task" @keyup.enter="add">
+      <div class="col">
+        <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="name" placeholder="Board Name"
+          style="font-size: 30px"></b-form-input>
+      </div>
+      <div class="col">
+        <b-form-textarea id="textarea" v-model="description" placeholder="Board Description" rows="1" max-rows="4">
+        </b-form-textarea>
+      </div>
+      <div class="col-3">
+        <b-form inline>
+        <b-form-input v-model="newCard" placeholder="Enter Task" @keyup.enter="addCard">
         </b-form-input>
-        <b-button @click="add" variant="primary" class="ml-3">
+        <b-button @click="addCard" variant="primary" class="ml-3">
           Add
         </b-button>
+        </b-form>
       </div>
     </div>
-  <div class="row mt-5">
-    <div class="col-3">
-      <div class="p-2 alert alert-secondary">
-        <h3>To-Do</h3>
-        <draggable class="list-group kanban-column" :list="arrTodo" group="tasks">
-          <div class="list-group-item" v-for="element in arrTodo" :key="element.name">
-            {{ element.name }}
-          </div>
-        </draggable>
+    <div class="row mt-5">
+      <div class="col">
+        <div class="p-3 alert alert-secondary">
+          <h3>To-Do</h3>
+          <draggable class="list-group kanban-column" :list="arrTodo" group="tasks">
+            <Card v-for="cards in arrTodo" v-bind:key="cards.name" v-bind:name="cards.name"/>
+          </draggable>
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-3 alert alert-primary">
+          <h3>In Progress</h3>
+          <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
+            <Card v-for="cards in arrInProgress" v-bind:key="cards.name" v-bind:name="cards.name"/>
+          </draggable>
+        </div>
+      </div>
+      <div class="col">
+        <div class="p-3 alert alert-success">
+          <h3>Done</h3>
+          <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
+            <Card v-for="cards in arrDone" v-bind:key="cards.name" v-bind:name="cards.name"/> 
+            <!-- <div class="list-group-item" v-for="element in arrDone" :key="element.name">
+              {{ element.name }}
+            </div> -->
+          </draggable>
+        </div>
       </div>
     </div>
-    <div class="col-3">
-      <div class="p-2 alert alert-primary">
-        <h3>In Progress</h3>
-        <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
-          <div class="list-group-item" v-for="element in arrInProgress" :key="element.name">
-            {{ element.name }}
-          </div>
-        </draggable>
-      </div>
-    </div>
-    <div class="col-3">
-      <div class="p-2 alert alert-success">
-        <h3>Done</h3>
-        <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
-          <div class="list-group-item" v-for="element in arrDone" :key="element.name">
-            {{ element.name }}
-          </div>
-        </draggable>
-      </div>
-    </div>
-  </div>
     <KanbanColumn />
   </div>
 </template>
 
 <script>
-import KanbanColumn from "./components/KanbanColumn.vue";
 import draggable from "vuedraggable";
+import KanbanColumn from "./components/KanbanColumn.vue";
+import Card from "./components/Card.vue";
 
 export default {
   name: 'App',
   components: {
+    draggable,
     KanbanColumn,
-    draggable
+    Card
   },
   data() {
     return {
+      name: "",
+      description: "",
       newCard: "",
       arrTodo: [
         { name: "Code Sign Up Page" },
@@ -94,5 +103,6 @@ export default {
 }
 .kanban-column {
   min-height: 300px;
+  /* min-width: 300px; */
 }
 </style>
