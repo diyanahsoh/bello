@@ -14,7 +14,7 @@
     name: 'Card',
     props: {
       name: String,
-      board: Object
+      board: Array
     },
     data () {
       return {

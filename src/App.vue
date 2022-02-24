@@ -1,7 +1,7 @@
 <template>
-  <div id="app" class="container mt-3">
+  <div id="app" class="container vh-100">
     <div class="row">
-      <h1>Bello - Kanban Board</h1>
+      <h1 class="mt-3">Bello - Kanban Board</h1>
       <div class="col">
         <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="name" placeholder="Board Name"
           style="font-size: 30px"></b-form-input>
@@ -20,7 +20,7 @@
         <div class="p-3 alert alert-primary">
           <h3>To-Do</h3>
           <draggable class="list-group kanban-column" :list="arrTodo" group="tasks">
-            <Card v-for="cards in arrTodo" v-bind:key="cards.name" v-bind:name="cards.name" @on-delete="onDelete" />
+            <Card v-for="cards in arrTodo" :key="cards.name" :name="cards.name" :board="arrTodo" @on-delete="onDelete" />
           </draggable>
           <b-form inline v-if="addNew">
             <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="newCard"
@@ -40,7 +40,7 @@
         <div class="p-3 alert alert-warning">
           <h3>In Progress</h3>
           <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
-            <Card v-for="cards in arrInProgress" v-bind:key="cards.name" v-bind:name="cards.name" @on-delete="onDelete" />
+            <Card v-for="cards in arrInProgress" :key="cards.name" :name="cards.name" :board="arrInProgress" @on-delete="onDelete" />
           </draggable>
           <b-form inline v-if="addProg">
             <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="progCard"
@@ -136,15 +136,20 @@ export default {
       }
     },
     onDelete(cardText, board) {
-      console.log(board);
-      var index = board.indexOf(cardText);
+      var index = this.getIndex(board, cardText);
+      console.log(index);
       if (index > -1) {
         board.splice(index, 1);
       }
       return board;
-      // alert(`Deleting ${cardText}`);
+    },
+    getIndex(array, text) {
+      for (let i = 0; i < array.length; i++) {
+        if (text == array[i].name) {
+          return i
+        }
+      }
     }
-
   }
 }
 </script>
@@ -157,6 +162,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  /* background-image: linear-gradient(to bottom right, white, blue); */
 }
 .kanban-column {
   min-height: 300px;
