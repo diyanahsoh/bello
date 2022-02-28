@@ -20,27 +20,28 @@
         <div class="p-3 alert alert-primary">
           <h3>To-Do</h3>
           <draggable class="list-group kanban-column" :list="arrTodo" group="tasks">
-            <Card v-for="cards in arrTodo" :key="cards.name" :name="cards.name" :board="arrTodo" @on-delete="onDelete" />
+            <Card v-for="cards in arrTodo" :key="cards.name" :name="cards.name" :board="arrTodo" @on-edit="onEdit" @on-delete="onDelete" />
           </draggable>
-          <b-form inline v-if="addNew">
-            <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="newCard"
-              placeholder="Enter Task" @keyup.enter="addCard" style="display: inline; width: inherit; margin-right: 20px;">
+          <b-form inline v-if="addTodo">
+            <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="todoCard"
+              placeholder="Enter Task" style="display: inline; width: inherit; margin-right: 20px;">
             </b-form-input>
             <b-button variant="success" class="ml-3" @click="addCard()">
               Add
             </b-button>
           </b-form>
-          <b-button v-else variant="primary" class="ml-3" @click="addNew=true">
+          <b-button v-else variant="primary" class="ml-3" @click="addTodo=true">
             Add new card
           </b-button>
         </div>
+        <b-alert show variant="primary">Max No. Cards: {{ maxTodo }}</b-alert>
       </div>
 
       <div class="col">
         <div class="p-3 alert alert-warning">
           <h3>In Progress</h3>
           <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
-            <Card v-for="cards in arrInProgress" :key="cards.name" :name="cards.name" :board="arrInProgress" @on-delete="onDelete" />
+            <Card v-for="cards in arrInProgress" :key="cards.name" :name="cards.name" :board="arrInProgress" @on-edit="onEdit" @on-delete="onDelete" />
           </draggable>
           <b-form inline v-if="addProg">
             <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="progCard"
@@ -54,15 +55,15 @@
             Add new card
           </b-button>
         </div>
+        <b-alert show variant="warning">Max No. Cards: {{ maxProg }}</b-alert>
       </div>
 
       <div class="col">
         <div class="p-3 alert alert-success">
           <h3>Done</h3>
           <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
-            <Card v-for="cards in arrDone" :key="cards.name" :name="cards.name" :board="arrDone" @on-delete="onDelete" />
+            <Card v-for="cards in arrDone" :key="cards.name" :name="cards.name" :board="arrDone" @on-edit="onEdit" @on-delete="onDelete" />
           </draggable>
-          
           <b-form inline v-if="addDone">
             <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="doneCard"
               placeholder="Enter Task" style="display: inline; width: inherit; margin-right: 20px;">
@@ -75,6 +76,7 @@
             Add new card
           </b-button>
         </div>
+        <b-alert show variant="success">Max No. Cards: {{ maxDone }}</b-alert>
       </div>
     </div>
     <KanbanColumn />
@@ -97,12 +99,15 @@ export default {
     return {
       name: "",
       description: "",
-      newCard: "",
+      todoCard: "",
       progCard: "",
       doneCard: "",
-      addNew: false,
+      addTodo: false,
       addProg: false,
       addDone: false,
+      maxTodo: 5,
+      maxProg: 5,
+      maxDone: 5,
       arrTodo: [
         { name: "Code Sign Up Page" },
         { name: "Help with Designs" }
@@ -111,29 +116,44 @@ export default {
       arrDone: []
     };
   },
+  mounted() {
+    if (localStorage.name) {
+      this.name = localStorage.name;
+    } else {
+      localStorage.name = this.name;
+    }
+    if (localStorage.description) {
+      this.description = localStorage.description;
+    } else {
+      localStorage.description = this.description;
+    }
+  },
   methods: {
     addCard() {
-      if (this.newCard) {
+      if (this.todoCard && this.arrTodo.length < this.maxTodo) {
         this.arrTodo.push({
-          name: this.newCard
+          name: this.todoCard
         });
-        this.newCard = "";
-        this.addNew = false;
+        this.todoCard = "";
+        this.addTodo = false;
       }
-      if (this.progCard) {
+      if (this.progCard && this.arrInProgress.length < this.maxProg) {
         this.arrInProgress.push({
           name: this.progCard
         });
         this.progCard = "";
         this.addProg = false;
       }
-      if (this.doneCard) {
+      if (this.doneCard && this.arrDone.length < this.maxDone) {
         this.arrDone.push({
           name: this.doneCard
         });
         this.doneCard = "";
         this.addDone = false;
       }
+    },
+    onEdit(user) {
+      alert(`Editing ${user.name}`);
     },
     onDelete(cardText, board) {
       var index = this.getIndex(board, cardText);
