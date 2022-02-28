@@ -10,12 +10,8 @@
         <b-form-textarea id="textarea" v-model="description" placeholder="Board Description" rows="1" max-rows="4">
         </b-form-textarea>
       </div>
-      <div class="col-3">
-        <b-form inline>
-        </b-form>
-      </div>
     </div>
-    <div class="row mt-5">
+    <div class="row mt-4">
       <div class="col">
         <div class="p-3 alert alert-primary">
           <h3>To-Do</h3>
@@ -186,5 +182,6 @@ export default {
 }
 .kanban-column {
   min-height: 300px;
+  min-width: 250px;
 }
 </style>
