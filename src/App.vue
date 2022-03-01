@@ -48,7 +48,7 @@
       <div class="col">
         <div class="p-3 alert-warning">
           <h3>In Progress</h3>
-          <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks">
+          <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks"><!--  :move="checkMove" -->
             <Card v-for="cards in arrInProgress" :key="cards.name" :name="cards.name" :board="arrInProgress" @on-edit="onEdit" @on-delete="onDelete" />
           </draggable>
           <b-form inline v-if="addProg" class="mt-3">
@@ -111,20 +111,17 @@
         </b-alert>
       </div>
     </div>
-    <KanbanColumn />
   </div>
 </template>
 
 <script>
 import draggable from "vuedraggable";
-import KanbanColumn from "./components/KanbanColumn.vue";
 import Card from "./components/Card.vue";
 
 export default {
   name: 'App',
   components: {
     draggable,
-    KanbanColumn,
     Card
   },
   data() {
@@ -204,7 +201,17 @@ export default {
           return i
         }
       }
-    }
+    },
+		checkMove: function(evt) { //https://github.com/SortableJS/Vue.Draggable/issues/45
+			// if (evt.draggedContext.element.name=='test'){
+			// 	return false
+			// }
+      console.log(evt.relatedContext);
+			if (evt.relatedContext.list.length==this.maxProg){
+				return false
+			}
+			return true;
+		},
   }
 }
 </script>
