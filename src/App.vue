@@ -1,18 +1,23 @@
 <template>
-  <div id="app" class="container vh-100">
-    <div class="row">
-      <div class="col-12"><h1 class="mt-3">Bello - Kanban Board</h1></div>
-      <div class="col">
+  <b-container id="app" class="background" fluid>
+    <div class="cube"></div>
+    <div class="cube"></div>
+    <div class="cube"></div>
+    <div class="cube"></div>
+    <div class="cube"></div>
+    <b-row>
+      <b-col cols="12"><h1 class="mt-3" style="color: white">Bello - Kanban Board</h1></b-col>
+      <b-col>
         <b-form-input id="inline-form-input-name" class="mb-2 mr-sm-2 mb-sm-0" v-model="name" placeholder="Board Name"
           style="font-size: 30px"></b-form-input>
-      </div>
-      <div class="col">
+      </b-col>
+      <b-col>
         <b-form-textarea id="textarea" v-model="description" placeholder="Board Description" rows="1" max-rows="4">
         </b-form-textarea>
-      </div>
-    </div>
-    <div class="row mt-4">
-      <div class="col">
+      </b-col>
+    </b-row>
+    <b-row class="mt-4">
+      <b-col>
         <div class="p-3 alert-primary">
           <h3>To-Do</h3>
           <draggable class="list-group kanban-column" :list="arrTodo" group="tasks">
@@ -43,9 +48,9 @@
             Edit Max No.
           </b-button>
         </b-alert>
-      </div>
+      </b-col>
 
-      <div class="col">
+      <b-col>
         <div class="p-3 alert-warning">
           <h3>In Progress</h3>
           <draggable class="list-group kanban-column" :list="arrInProgress" group="tasks"><!--  :move="checkMove" -->
@@ -76,9 +81,9 @@
             Edit Max No.
           </b-button>
         </b-alert>
-      </div>
+      </b-col>
 
-      <div class="col">
+      <b-col>
         <div class="p-3 alert-success">
           <h3>Done</h3>
           <draggable class="list-group kanban-column" :list="arrDone" group="tasks">
@@ -109,9 +114,9 @@
             Edit Max No.
           </b-button>
         </b-alert>
-      </div>
-    </div>
-  </div>
+      </b-col>
+    </b-row>
+  </b-container>
 </template>
 
 <script>
@@ -224,10 +229,87 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  /* background-image: linear-gradient(to bottom right, white, blue); */
+  width: inherit;
+  /* border: 2px solid red; */
+}
+.container {
+  border: 2px solid blue;
 }
 .kanban-column {
   min-height: 300px;
   min-width: 250px;
+}
+/* ============= Animation background ========= */
+.background {
+  background: linear-gradient(132deg, #3b3d54, #591BC5, #212335);
+  background-size: 400% 400%;
+  animation: Gradient 15s ease infinite;
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  padding:0;
+  margin:0px;
+}
+.cube {
+  position: absolute;
+  top: 80vh;
+  left: 45vw;
+  width: 10px;
+  height: 10px;
+  border: solid 1px #D7D4E4;
+  transform-origin: top left;
+  transform: scale(0) rotate(0deg) translate(-50%, -50%);
+  animation: cube 12s ease-in forwards infinite;
+}
+.cube:nth-child(2n) {
+  border-color: #FFF ;
+}
+.cube:nth-child(2) {
+  animation-delay: 2s;
+  left: 25vw;
+  top: 40vh;
+}
+.cube:nth-child(3) {
+  animation-delay: 4s;
+  left: 75vw;
+  top: 50vh;
+}
+.cube:nth-child(4) {
+  animation-delay: 6s;
+  left: 90vw;
+  top: 10vh;
+}
+.cube:nth-child(5) {
+  animation-delay: 8s;
+  left: 10vw;
+  top: 85vh;
+}
+.cube:nth-child(6) {
+  animation-delay: 10s;
+  left: 50vw;
+  top: 10vh;
+}
+/* Animate Background*/
+@keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes cube {
+  from {
+    transform: scale(0) rotate(0deg) translate(-50%, -50%);
+    opacity: 1;
+  }
+  to {
+    transform: scale(20) rotate(960deg) translate(-50%, -50%);
+    opacity: 0;
+  }
 }
 </style>
